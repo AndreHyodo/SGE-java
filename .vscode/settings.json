@@ -1,0 +1,10 @@
+{
+    "java.debug.settings.onBuildFailureProceed": true
+    
+}
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "c:\\path\\to\\jarfile\\commons-logging-1.1.1.jar"
+    ]
+}
