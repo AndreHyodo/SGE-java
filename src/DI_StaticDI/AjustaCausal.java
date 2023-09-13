@@ -76,10 +76,10 @@ public class AjustaCausal {
             // Converter LocalTime para Time
             Time sqlHoraAtual = Time.valueOf(horaAtual);
             
-            System.out.print(ETB + ": Hora final: " + sqlhora_final + "\n"+ ETB +": Hora atual: " + sqlHoraAtual + "\n");
+            // System.out.print(ETB + ": Hora final: " + sqlhora_final + "\n"+ ETB +": Hora atual: " + sqlHoraAtual + "\n");
 
             if (sqlhora_final.equals(zero)){
-                System.out.print("\n " + ETB + ": HORA FINAL ZERADA ");
+                // System.out.print("\n " + ETB + ": HORA FINAL ZERADA ");
                 // Atualize a última linha da tabela para definir o horário final como um novo valor
                 String updateQuery = "UPDATE " + ETB + " SET hora_final = ? WHERE hora_final = '0'";
                 preparedStatement = connection.prepareStatement(updateQuery);

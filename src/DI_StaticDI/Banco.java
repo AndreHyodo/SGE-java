@@ -31,7 +31,7 @@ public class Banco {
             	}else if(column == "hora_final") {
             		hora_final = resultSet.getTime(column);
             	}
-                System.out.println(roomName + ": " + causal);
+                // System.out.println(roomName + ": " + causal);
             }
             
             

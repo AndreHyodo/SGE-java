@@ -75,15 +75,15 @@ public class StaticDI extends JFrame implements ActionListener {
 
 	private JLabel Label_Eff_Dev[] = new JLabel[12];
 	private JLabel Label_Eff_Dur[] = new JLabel[12];
-	// private JLabel Label_Eff_SC[] = new JLabel[12];
+	private JLabel Label_Eff_SC[] = new JLabel[12];
 
 	private JLabel Label_months_DEV[] = new JLabel[12];
 	private JLabel Label_months_DUR[] = new JLabel[12];	
-	// private JLabel Label_months_SC[] = new JLabel[12];				
+	private JLabel Label_months_SC[] = new JLabel[12];				
 
 	private JPanel Panel_Eff_Dev[] = new JPanel[12];
 	private JPanel Panel_Eff_Dur[] = new JPanel[12];
-	// private JPanel Panel_Eff_SC[] = new JPanel[12];
+	private JPanel Panel_Eff_SC[] = new JPanel[12];
 //	public static String colorStatus[] = {"Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black"};
 	
 	public static Color colorStatus[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
@@ -204,7 +204,7 @@ public class StaticDI extends JFrame implements ActionListener {
 		headerPanel.add(logoPanel, BorderLayout.EAST);
 
 		JPanel footerPanel = new JPanel(new GridLayout(1, 4));
-		footerPanel.setPreferredSize(new Dimension(getWidth(), (getHeight() / 6)));
+		footerPanel.setPreferredSize(new Dimension(getWidth(), (getHeight() / 8)));
 		footerPanel.setBackground(Color.LIGHT_GRAY);
 		contentPane.add(footerPanel, BorderLayout.SOUTH);
 		
@@ -218,6 +218,7 @@ public class StaticDI extends JFrame implements ActionListener {
 		histDEV.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda       
 		histDEV.setBorder(new EmptyBorder(0, 0, 0, 20));
 		histDEV.setLayout(new BorderLayout());
+		histDEV.setBackground(Color.LIGHT_GRAY);
 
 		JLabel name_histDEV = new JLabel("Desenvolvimento");
 		name_histDEV.setHorizontalAlignment(SwingConstants.CENTER);
@@ -246,7 +247,7 @@ public class StaticDI extends JFrame implements ActionListener {
 			
 			Label_Eff_Dev[i] = new JLabel("90%");
 			Label_Eff_Dev[i].setHorizontalAlignment(SwingConstants.CENTER);
-			Label_Eff_Dev[i].setFont(new Font("Arial", Font.PLAIN, 27));
+			Label_Eff_Dev[i].setFont(new Font("Arial", Font.PLAIN, 20));
 			Panel_Eff_Dev[i].add(Label_Eff_Dev[i],BorderLayout.SOUTH);
 
 			
@@ -263,6 +264,7 @@ public class StaticDI extends JFrame implements ActionListener {
 		histDUR.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda
 		histDEV.setBorder(new EmptyBorder(0, 0, 0, 20));
 		histDUR.setLayout(new BorderLayout());
+		histDUR.setBackground(Color.LIGHT_GRAY);
 
 		JLabel name_histDUR = new JLabel("Durabilidade");
 		name_histDUR.setHorizontalAlignment(SwingConstants.CENTER);
@@ -291,7 +293,7 @@ public class StaticDI extends JFrame implements ActionListener {
 			
 			Label_Eff_Dur[i] = new JLabel("90%");
 			Label_Eff_Dur[i].setHorizontalAlignment(SwingConstants.CENTER);
-			Label_Eff_Dur[i].setFont(new Font("Arial", Font.PLAIN, 27));
+			Label_Eff_Dur[i].setFont(new Font("Arial", Font.PLAIN, 20));
 			Panel_Eff_Dur[i].add(Label_Eff_Dur[i],BorderLayout.SOUTH);
 
 			
@@ -302,11 +304,48 @@ public class StaticDI extends JFrame implements ActionListener {
 		footerPanel.add(histDUR);
 		// HISTÓRICO STARTCART -----------------------------------------------------------------------------------
 
-		JLabel hist_4 = new JLabel("Efficiency Management System");
-        hist_4.setFont(new Font("Arial", Font.ITALIC, 40));
-		// title.setBorder(BorderFactory.createLineBorder(Color.green, 4)); // 2 é a largura da borda
-        hist_4.setForeground(new Color(0xf6f7f9));
-        footerPanel.add(hist_4, BorderLayout.LINE_END);
+		JPanel histSC = new JPanel();       
+		histSC.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda
+		histSC.setBorder(new EmptyBorder(0, 20, 0, 20));
+		histSC.setLayout(new BorderLayout());
+		histSC.setBackground(Color.LIGHT_GRAY);
+
+		JLabel name_histSC = new JLabel("Start Cart");
+		name_histSC.setHorizontalAlignment(SwingConstants.CENTER);
+		name_histSC.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2));
+		name_histSC.setOpaque(true);
+		//roomLabel.setBackground(Color.LIGHT_GRAY);
+		name_histSC.setFont(new Font("Arial", Font.PLAIN, 30));
+		histSC.add(name_histSC, BorderLayout.NORTH);
+
+		JPanel histSC_data = new JPanel(new GridLayout(2, 6));
+
+
+		histSC.add(histSC_data, BorderLayout.CENTER);
+
+		for(int i=0;i<12;i++){
+			Panel_Eff_SC[i] = new JPanel();      
+            Panel_Eff_SC[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_SC[i], 2)); // 2 é a largura da borda
+            Panel_Eff_SC[i].setLayout(new BorderLayout());
+
+			Label_months_SC[i] = new JLabel(months[i]);      
+            Label_months_SC[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_SC[i], 1)); // 2 é a largura da borda
+            Label_months_SC[i].setHorizontalAlignment(SwingConstants.CENTER);
+			Label_months_SC[i].setFont(new Font("Arial", Font.PLAIN, 15));
+            Label_months_SC[i].setLayout(new BorderLayout());
+			Panel_Eff_SC[i].add(Label_months_SC[i],BorderLayout.NORTH);
+			
+			Label_Eff_SC[i] = new JLabel("90%");
+			Label_Eff_SC[i].setHorizontalAlignment(SwingConstants.CENTER);
+			Label_Eff_SC[i].setFont(new Font("Arial", Font.PLAIN, 20));
+			Panel_Eff_SC[i].add(Label_Eff_SC[i],BorderLayout.SOUTH);
+
+			
+			histSC_data.add(Panel_Eff_SC[i]);
+		}
+
+
+		footerPanel.add(histSC);
 
 		// SALA PROVA TRANSMISSOES -----------------------------------------------------------------------------------
 
@@ -314,76 +353,84 @@ public class StaticDI extends JFrame implements ActionListener {
 		spt.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda
 		spt.setLayout(new BorderLayout());
 		
-			// First row: Room name            
+		
+			// First row: Room name
+		JPanel titleSPT = new JPanel(new GridLayout(1,2));
+
 		JLabel room_spt = new JLabel(roomName[18]);
 		room_spt.setHorizontalAlignment(SwingConstants.CENTER);
 		room_spt.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2));
 		room_spt.setOpaque(true);
 		//roomLabel.setBackground(Color.LIGHT_GRAY);
-		room_spt.setFont(new Font("Arial", Font.PLAIN, 30));
-		spt.add(room_spt, BorderLayout.NORTH);
-		
-// 		// Second row: Cause
-// 		causal[18] = Banco.fetchAndDisplayCausal(roomName[18]);
-// 		causeLabel[18] = new JLabel("<html>" + causal[18] + "</html>");
-// 		causeLabel[18].setHorizontalAlignment(SwingConstants.CENTER);
-// 		causeLabel[18].setFont(new Font("Arial", Font.PLAIN, 30));
-// 		motorPanel[18].add(causeLabel[18], BorderLayout.CENTER);
+		room_spt.setFont(new Font("Arial", Font.PLAIN, 20));
 
-// 		// Third row: EFF and Data List
-// 		JPanel effAndDataPanelTrans = new JPanel();
-// //            effAndDataPanel.setLayout(new GridLayout(3, 2));
-
-// 		// EFF
-// 		JPanel eff_Trans = new JPanel();
-// 		eff_Trans.setLayout(new GridLayout(2, 1));
-// 		eff_Trans.setPreferredSize(new Dimension((getWidth()/12), 70));
-// 		eff_Trans.setBackground(Color.GREEN);
-// 		effAndDataPanelTrans.add(eff_Trans, BorderLayout.WEST);
+		// EFF
+		JPanel eff_Trans = new JPanel();
+		eff_Trans.setPreferredSize(new Dimension((getWidth()/10),getHeight()));
+		eff_Trans.setLayout(new GridLayout(1 ,2));
+		eff_Trans.setPreferredSize(new Dimension((getWidth()/3), 25));
+		eff_Trans.setBackground(Color.GREEN);
 		
-// 		JLabel effLabelT = new JLabel("Eficiência");
-// 		effLabelT.setHorizontalAlignment(SwingConstants.CENTER);
-// 		effLabelT.setFont(new Font("Arial", Font.BOLD, 15));
-// 		eff_Trans.add(effLabelT);
+		
+		JLabel effLabelT = new JLabel("Eficiência");
+		effLabelT.setHorizontalAlignment(SwingConstants.CENTER);
+		effLabelT.setFont(new Font("Arial", Font.BOLD, 20));
+		eff_Trans.add(effLabelT);
 
-// 		JLabel num_EffT = new JLabel("90%");
-// 		num_EffT.setHorizontalAlignment(SwingConstants.CENTER);
-// 		num_EffT.setFont(new Font("Arial", Font.BOLD, 35));
-// 		eff_Trans.add(num_EffT);
+		JLabel num_EffT = new JLabel("90%");
+		num_EffT.setHorizontalAlignment(SwingConstants.CENTER);
+		num_EffT.setFont(new Font("Arial", Font.BOLD, 25));
+		eff_Trans.add(num_EffT);
+
+		titleSPT.add(room_spt);
+		titleSPT.add(eff_Trans, BorderLayout.EAST);
+		spt.add(titleSPT, BorderLayout.NORTH);
+		
+		// Second row: Cause
+		causal[18] = Banco.fetchAndDisplayCausal(roomName[18]);
+		System.out.println(causal[18]);
+		causeLabel[18] = new JLabel("<html>" + causal[18] + "</html>");
+		causeLabel[18].setHorizontalAlignment(SwingConstants.CENTER);
+		causeLabel[18].setFont(new Font("Arial", Font.PLAIN, 25));
+		spt.add(causeLabel[18], BorderLayout.CENTER);
+
+		// Third row: EFF and Data List
+		JPanel effAndDataPanelTrans = new JPanel();
+		effAndDataPanelTrans.setLayout(new GridLayout(3, 2));
 		
 
-// 		// Data List
-// 		JPanel dataT = new JPanel();
-// 		dataT.setPreferredSize(new Dimension((getWidth()/15), 70));
-// //            data.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
-// 		dataT.setLayout(new GridLayout(3, 2));
-// 		effAndDataPanelTrans.add(dataT, BorderLayout.EAST);
+		// Data List
+		JPanel dataT = new JPanel();
+		dataT.setPreferredSize(new Dimension((getWidth()/20), 10));
+//            data.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+		dataT.setLayout(new GridLayout(3, 2));
+		effAndDataPanelTrans.add(dataT, BorderLayout.EAST);
 		
-// 		JLabel numTransLabel = new JLabel("Transmissão");
-// 		numTransLabel.setFont(new Font("Arial", Font.BOLD, 15));
-// 		dataT.add(numTransLabel);
+		JLabel numTransLabel = new JLabel("Transmissão");
+		numTransLabel.setFont(new Font("Arial", Font.BOLD, 10));
+		dataT.add(numTransLabel);
 		
-// 		JLabel getNumTrans = new JLabel("124563");
-// 		getNumTrans.setFont(new Font("Arial", Font.BOLD, 15));
-// 		dataT.add(getNumTrans);
+		JLabel getNumTrans = new JLabel("124563");
+		getNumTrans.setFont(new Font("Arial", Font.BOLD, 10));
+		dataT.add(getNumTrans);
 
-// 		JLabel projetoLabelT = new JLabel("Projeto");
-// 		projetoLabelT.setFont(new Font("Arial", Font.BOLD, 15));
-// 		dataT.add(projetoLabelT);
+		JLabel projetoLabelT = new JLabel("Projeto");
+		projetoLabelT.setFont(new Font("Arial", Font.BOLD, 10));
+		dataT.add(projetoLabelT);
 		
-// 		JLabel getProjetoLabelT = new JLabel("B1025");
-// 		getProjetoLabelT.setFont(new Font("Arial", Font.BOLD, 15));
-// 		dataT.add(getProjetoLabelT);
+		JLabel getProjetoLabelT = new JLabel("B1025");
+		getProjetoLabelT.setFont(new Font("Arial", Font.BOLD, 10));
+		dataT.add(getProjetoLabelT);
 
-// 		JLabel testeLabelT = new JLabel("Teste");
-// 		testeLabelT.setFont(new Font("Arial", Font.BOLD, 15));
-// 		dataT.add(testeLabelT);
+		JLabel testeLabelT = new JLabel("Teste");
+		testeLabelT.setFont(new Font("Arial", Font.BOLD, 10));
+		dataT.add(testeLabelT);
 		
-// 		JLabel getTesteLabelT = new JLabel("DUR112");
-// 		getTesteLabelT.setFont(new Font("Arial", Font.BOLD, 15));
-// 		dataT.add(getTesteLabelT);
+		JLabel getTesteLabelT = new JLabel("DUR112");
+		getTesteLabelT.setFont(new Font("Arial", Font.BOLD, 10));
+		dataT.add(getTesteLabelT);
 
-// 		motorPanel[18].add(effAndDataPanelTrans, BorderLayout.SOUTH);
+		spt.add(effAndDataPanelTrans, BorderLayout.SOUTH);
 
 		footerPanel.add(spt);
 
@@ -541,7 +588,7 @@ public class StaticDI extends JFrame implements ActionListener {
 		
 		for (int i = 0; i < portCount; i++) {
 			DiPorts[i] = new DioPortUI(i, contentPane, location, imageIcon, (byte) 0);
-			System.out.print("num portas: " + portCount + "\n" + DiPorts[i]);
+			// System.out.print("num portas: " + portCount + "\n" + DiPorts[i]);
 			if (i % 2 == 0) {
 				location.y += 40;
 			} else {
