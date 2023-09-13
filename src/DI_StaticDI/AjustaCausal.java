@@ -7,6 +7,7 @@ import java.time.LocalTime;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import Automation.BDaq.*;
@@ -51,7 +52,7 @@ public class AjustaCausal {
 //				resultSet.close();
 //				statement.close();
 //				connection.close();
-		
+		java.sql.PreparedStatement preparedStatement;
 
         try (Connection connection = DriverManager.getConnection(Banco.JDBC_URL, Banco.USER, Banco.PASSWORD)) {
         	
@@ -75,15 +76,16 @@ public class AjustaCausal {
             // Converter LocalTime para Time
             Time sqlHoraAtual = Time.valueOf(horaAtual);
             
-            System.out.print("Hora final: " + sqlhora_final + "\nHora atual: " + sqlHoraAtual + "\n");
+            System.out.print(ETB + ": Hora final: " + sqlhora_final + "\n"+ ETB +": Hora atual: " + sqlHoraAtual + "\n");
 
             if (sqlhora_final.equals(zero)){
+                System.out.print("\n " + ETB + ": HORA FINAL ZERADA ");
                 // Atualize a última linha da tabela para definir o horário final como um novo valor
                 String updateQuery = "UPDATE " + ETB + " SET hora_final = ? WHERE hora_final = '0'";
-                java.sql.PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
+                preparedStatement = connection.prepareStatement(updateQuery);
                 preparedStatement.setTime(1, sqlHoraAtual); // Defina a nova hora final aqui
                 preparedStatement.executeUpdate();
-                preparedStatement.close();
+                // preparedStatement.close();
             }
         } catch (Exception e) {
             e.printStackTrace();

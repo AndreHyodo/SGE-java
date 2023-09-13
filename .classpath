@@ -8,8 +8,5 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Advantech/DAQNavi/Inc/Automation.BDaq.jar"/>
 	<classpathentry kind="lib" path="src/DI_StaticDI/mysql-connector-j-8.0.33.jar"/>
-	<classpathentry kind="lib" path="src/jfreechart-1.5.2/svg/lib/jfreechart_utils.jar"/>
-
-
 	<classpathentry kind="output" path="bin"/>
 </classpath>

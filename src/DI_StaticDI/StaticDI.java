@@ -1,52 +1,45 @@
 package DI_StaticDI;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.awt.image.ImageObserver;
-import java.awt.image.ImageProducer;
-import java.awt.Font;
-import java.awt.Graphics;
 
-import javax.lang.model.type.NullType;
-import javax.print.DocFlavor.URL;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+// import javax.swing.JButton;
+// import javax.swing.border.LineBorder;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
 // import javax.swing.UIManager;
 // import javax.swing.border.EmptyBorder;
 // import java.awt.SystemColor;
 // import java.awt.Taskbar.State;
+import javax.swing.border.EmptyBorder;
 
-// import javax.swing.JButton;
-// import javax.swing.border.LineBorder;
-import javax.swing.JScrollPane;
-
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-
-import Common.*;
-import Automation.BDaq.*;
 // import DI_StaticDI.Banco;
 // import DI_StaticDI.AjustaCausal;
 // import DI_StaticDI.StaticDI.ButtonConfigureActionListener;
 // import DI_StaticDI.StaticDI.WindowCloseActionListener;
 // import DI_StaticDI.ColorStatus.*;
+import Automation.BDaq.DeviceInformation;
+import Automation.BDaq.ErrorCode;
+import Automation.BDaq.InstantDiCtrl;
+import Common.Global;
 
 public class StaticDI extends JFrame implements ActionListener {
 
@@ -56,13 +49,11 @@ public class StaticDI extends JFrame implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JScrollPane portPanel;
 	private JPanel allPanel;
 	private JPanel headerPanel;
-	private JLabel startCart;
-	private JLabel roomLabel[] = new JLabel[18];
-	private JPanel motorPanel[] = new JPanel[18];
-	private JLabel causeLabel[] = new JLabel[18];
+	private JLabel roomLabel[] = new JLabel[19];
+	private JPanel motorPanel[] = new JPanel[19];
+	private JLabel causeLabel[] = new JLabel[19];
 	public ImageIcon[] imageIcon = { 
 			new BackgroundPanel("ledLow.png", "Low").getImageIcon(),
 			new BackgroundPanel("ledHigh.png", "High").getImageIcon() 
@@ -75,12 +66,33 @@ public class StaticDI extends JFrame implements ActionListener {
 	private DioPortUI[] DiPorts = new DioPortUI[18];
 	private byte[] data;
 	
-	String roomName[] = {"A01", "A02", "A03", "A04", "A05", "A10", "A06", "A07", "A08", "A09", "A11", "A12", "B01", "B02", "B03", "B04", "B05", "B06"};
-	String causal[] = new String[18];
+	String roomName[] = {"A01", "A02", "A03", "A04", "A05", "A10", "A06", "A07", "A08", "A09", "A11", "A12", "B01", "B02", "B03", "B04", "B05", "B06", "SPT"};
+	String causal[] = new String[19];
+	private String months[] = {"Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul", "Ago", "Set", "Out", "Nov", "Dez"};
+	String Hist_Eff_Dev[] = new String[12];
+	String Hist_Eff_Dur[] = new String[12];
+	String Hist_Eff_SC[] = new String[12];
+
+	private JLabel Label_Eff_Dev[] = new JLabel[12];
+	private JLabel Label_Eff_Dur[] = new JLabel[12];
+	// private JLabel Label_Eff_SC[] = new JLabel[12];
+
+	private JLabel Label_months_DEV[] = new JLabel[12];
+	private JLabel Label_months_DUR[] = new JLabel[12];	
+	// private JLabel Label_months_SC[] = new JLabel[12];				
+
+	private JPanel Panel_Eff_Dev[] = new JPanel[12];
+	private JPanel Panel_Eff_Dur[] = new JPanel[12];
+	// private JPanel Panel_Eff_SC[] = new JPanel[12];
 //	public static String colorStatus[] = {"Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black"};
 	
-	public static Color colorStatus[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
+	public static Color colorStatus[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
+
+	public static Color colorStatusEFF_DEV[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
+
+	public static Color colorStatusEFF_DUR[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
 	
+	public static Color colorStatusEFF_SC[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
 	
 	String color = "BLACK";
 	
@@ -89,14 +101,9 @@ public class StaticDI extends JFrame implements ActionListener {
 	
 //	public static int portCount;
 
-	
 	JPanel painel[] = new JPanel[18];
-	
-	
 
 	private Timer timer;
-	
-
 
 	/**
 	 * 
@@ -139,112 +146,292 @@ public class StaticDI extends JFrame implements ActionListener {
         contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
         setContentPane(contentPane);
-        
-        Point location = new Point(0, 0);
 
         configureDialog = new ConfigureDialog(this);
 		configureDialog.setModal(true);
 		configureDialog.setVisible(true);
 		
         // Header
-        headerPanel = new JPanel();
-        headerPanel.setPreferredSize(new Dimension(getWidth(), (getHeight()/20)));
+        headerPanel = new JPanel(new GridLayout(1, 3));
+        headerPanel.setPreferredSize(new Dimension(getWidth(), (getHeight()/16)));
         headerPanel.setBackground(new Color(0x24405d));
+		headerPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
         contentPane.add(headerPanel, BorderLayout.NORTH); 
         
 
 //		COLOCAR AQUI A LOGO STELLANTIS E A LOGO AUTOMAH SYSTEM
-        
+		ImageIcon originalIcon = new ImageIcon(getClass().getResource("logoStellantis.png")); // Carrega a imagem original
+		// Define as dimensões desejadas para a imagem
+		int larguraDesejada = 200; // Substitua pelo valor desejado
+		int alturaDesejada = 100; // Substitua pelo valor desejado
+		// Redimensiona a imagem original para as dimensões desejadas
+		Image imagemRedimensionada = originalIcon.getImage().getScaledInstance(larguraDesejada, alturaDesejada, Image.SCALE_SMOOTH);
+		// Cria um novo ImageIcon com a imagem redimensionada
+		ImageIcon iconRedimensionado = new ImageIcon(imagemRedimensionada);
+
+		// Cria o JLabel e define o ícone redimensionado
+		JLabel logo = new JLabel();
+		logo.setIcon(iconRedimensionado);
+        headerPanel.add(logo);
+
         JLabel title = new JLabel("Efficiency Management System");
-//      COLOCAR O TITLE COM COR DA LOGO STELLANTIS
         title.setFont(new Font("Arial", Font.ITALIC, 40));
+		// title.setBorder(BorderFactory.createLineBorder(Color.green, 4)); // 2 é a largura da borda
         title.setForeground(new Color(0xf6f7f9));
-        headerPanel.add(title, BorderLayout.CENTER);
+        headerPanel.add(title, BorderLayout.LINE_END);
 
-        // Footer
-        // JPanel footerPanel = new JPanel();
-        // footerPanel.setPreferredSize(new Dimension(getWidth(), (getHeight()/6)));
-        // footerPanel.setBackground(Color.LIGHT_GRAY);
-        // contentPane.add(footerPanel, BorderLayout.SOUTH);
+		//Logo AutomAH System
+		ImageIcon AutomAH = new ImageIcon(getClass().getResource("logoAutomAH.jpg")); // Carrega a imagem original
+		// Define as dimensões desejadas para a imagem
+		int larguraDesejadaLogo = 180; // Substitua pelo valor desejado
+		int alturaDesejadaLogo = 65; // Substitua pelo valor desejado
+		// Redimensiona a imagem original para as dimensões desejadas
+		Image imagemRedimensionada2 = AutomAH.getImage().getScaledInstance(larguraDesejadaLogo, alturaDesejadaLogo, Image.SCALE_SMOOTH);
+		// Cria um novo ImageIcon com a imagem redimensionada
+		ImageIcon iconRedimensionadoLogo = new ImageIcon(imagemRedimensionada2);
 
-		JPanel footerPanel = new JPanel();
+		// Cria o JLabel e define o ícone redimensionado
+		JLabel logo2 = new JLabel();
+		logo2.setIcon(iconRedimensionadoLogo);
+
+		// Cria um painel para o logo2 e define o layout como FlowLayout com alinhamento à direita
+		JPanel logoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		logoPanel.setBackground(new Color(0x24405d));
+		logoPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
+		logoPanel.add(logo2);
+
+		// Adiciona o painel do logo2 ao headerPanel
+		headerPanel.add(logoPanel, BorderLayout.EAST);
+
+		JPanel footerPanel = new JPanel(new GridLayout(1, 4));
 		footerPanel.setPreferredSize(new Dimension(getWidth(), (getHeight() / 6)));
 		footerPanel.setBackground(Color.LIGHT_GRAY);
 		contentPane.add(footerPanel, BorderLayout.SOUTH);
+		
 
-		// Create an instance of EfficiencyChartPanel and add it to the footer
-		EfficiencyChartPanel chartPanel = new EfficiencyChartPanel();
-		footerPanel.add(chartPanel);
+		// JPanel histDUR = new JPanel(new GridLayout(2,12));
+        // footerPanel.add(histDUR, BorderLayout.LINE_END);
+
+		// HISTÓRICO DESENVOLVIMENTO -----------------------------------------------------------------------------------
+
+		JPanel histDEV = new JPanel();
+		histDEV.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda       
+		histDEV.setBorder(new EmptyBorder(0, 0, 0, 20));
+		histDEV.setLayout(new BorderLayout());
+
+		JLabel name_histDEV = new JLabel("Desenvolvimento");
+		name_histDEV.setHorizontalAlignment(SwingConstants.CENTER);
+		name_histDEV.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2));
+		name_histDEV.setOpaque(true);
+		//roomLabel.setBackground(Color.LIGHT_GRAY);
+		name_histDEV.setFont(new Font("Arial", Font.PLAIN, 30));
+		histDEV.add(name_histDEV, BorderLayout.NORTH);
+
+		JPanel histDEV_data = new JPanel(new GridLayout(2, 6));
+
+
+		histDEV.add(histDEV_data, BorderLayout.CENTER);
+
+		for(int i=0;i<12;i++){
+			Panel_Eff_Dev[i] = new JPanel();      
+            Panel_Eff_Dev[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DEV[i], 2)); // 2 é a largura da borda
+            Panel_Eff_Dev[i].setLayout(new BorderLayout());
+
+			Label_months_DEV[i] = new JLabel(months[i]);      
+            Label_months_DEV[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DEV[i], 1)); // 2 é a largura da borda
+            Label_months_DEV[i].setHorizontalAlignment(SwingConstants.CENTER);
+			Label_months_DEV[i].setFont(new Font("Arial", Font.PLAIN, 15));
+            Label_months_DEV[i].setLayout(new BorderLayout());
+			Panel_Eff_Dev[i].add(Label_months_DEV[i],BorderLayout.NORTH);
+			
+			Label_Eff_Dev[i] = new JLabel("90%");
+			Label_Eff_Dev[i].setHorizontalAlignment(SwingConstants.CENTER);
+			Label_Eff_Dev[i].setFont(new Font("Arial", Font.PLAIN, 27));
+			Panel_Eff_Dev[i].add(Label_Eff_Dev[i],BorderLayout.SOUTH);
+
+			
+			histDEV_data.add(Panel_Eff_Dev[i]);
+		}
+
+
+		footerPanel.add(histDEV);
+		
+
+		// HISTÓRICO DURABILIDADE -----------------------------------------------------------------------------------
+
+		JPanel histDUR = new JPanel();       
+		histDUR.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda
+		histDEV.setBorder(new EmptyBorder(0, 0, 0, 20));
+		histDUR.setLayout(new BorderLayout());
+
+		JLabel name_histDUR = new JLabel("Durabilidade");
+		name_histDUR.setHorizontalAlignment(SwingConstants.CENTER);
+		name_histDUR.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2));
+		name_histDUR.setOpaque(true);
+		//roomLabel.setBackground(Color.LIGHT_GRAY);
+		name_histDUR.setFont(new Font("Arial", Font.PLAIN, 30));
+		histDUR.add(name_histDUR, BorderLayout.NORTH);
+
+		JPanel histDUR_data = new JPanel(new GridLayout(2, 6));
+
+
+		histDUR.add(histDUR_data, BorderLayout.CENTER);
+
+		for(int i=0;i<12;i++){
+			Panel_Eff_Dur[i] = new JPanel();      
+            Panel_Eff_Dur[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DUR[i], 2)); // 2 é a largura da borda
+            Panel_Eff_Dur[i].setLayout(new BorderLayout());
+
+			Label_months_DUR[i] = new JLabel(months[i]);      
+            Label_months_DUR[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DUR[i], 1)); // 2 é a largura da borda
+            Label_months_DUR[i].setHorizontalAlignment(SwingConstants.CENTER);
+			Label_months_DUR[i].setFont(new Font("Arial", Font.PLAIN, 15));
+            Label_months_DUR[i].setLayout(new BorderLayout());
+			Panel_Eff_Dur[i].add(Label_months_DUR[i],BorderLayout.NORTH);
+			
+			Label_Eff_Dur[i] = new JLabel("90%");
+			Label_Eff_Dur[i].setHorizontalAlignment(SwingConstants.CENTER);
+			Label_Eff_Dur[i].setFont(new Font("Arial", Font.PLAIN, 27));
+			Panel_Eff_Dur[i].add(Label_Eff_Dur[i],BorderLayout.SOUTH);
+
+			
+			histDUR_data.add(Panel_Eff_Dur[i]);
+		}
+
+
+		footerPanel.add(histDUR);
+		// HISTÓRICO STARTCART -----------------------------------------------------------------------------------
+
+		JLabel hist_4 = new JLabel("Efficiency Management System");
+        hist_4.setFont(new Font("Arial", Font.ITALIC, 40));
+		// title.setBorder(BorderFactory.createLineBorder(Color.green, 4)); // 2 é a largura da borda
+        hist_4.setForeground(new Color(0xf6f7f9));
+        footerPanel.add(hist_4, BorderLayout.LINE_END);
+
+		// SALA PROVA TRANSMISSOES -----------------------------------------------------------------------------------
+
+		JPanel spt = new JPanel();        
+		spt.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda
+		spt.setLayout(new BorderLayout());
+		
+			// First row: Room name            
+		JLabel room_spt = new JLabel(roomName[18]);
+		room_spt.setHorizontalAlignment(SwingConstants.CENTER);
+		room_spt.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2));
+		room_spt.setOpaque(true);
+		//roomLabel.setBackground(Color.LIGHT_GRAY);
+		room_spt.setFont(new Font("Arial", Font.PLAIN, 30));
+		spt.add(room_spt, BorderLayout.NORTH);
+		
+// 		// Second row: Cause
+// 		causal[18] = Banco.fetchAndDisplayCausal(roomName[18]);
+// 		causeLabel[18] = new JLabel("<html>" + causal[18] + "</html>");
+// 		causeLabel[18].setHorizontalAlignment(SwingConstants.CENTER);
+// 		causeLabel[18].setFont(new Font("Arial", Font.PLAIN, 30));
+// 		motorPanel[18].add(causeLabel[18], BorderLayout.CENTER);
+
+// 		// Third row: EFF and Data List
+// 		JPanel effAndDataPanelTrans = new JPanel();
+// //            effAndDataPanel.setLayout(new GridLayout(3, 2));
+
+// 		// EFF
+// 		JPanel eff_Trans = new JPanel();
+// 		eff_Trans.setLayout(new GridLayout(2, 1));
+// 		eff_Trans.setPreferredSize(new Dimension((getWidth()/12), 70));
+// 		eff_Trans.setBackground(Color.GREEN);
+// 		effAndDataPanelTrans.add(eff_Trans, BorderLayout.WEST);
+		
+// 		JLabel effLabelT = new JLabel("Eficiência");
+// 		effLabelT.setHorizontalAlignment(SwingConstants.CENTER);
+// 		effLabelT.setFont(new Font("Arial", Font.BOLD, 15));
+// 		eff_Trans.add(effLabelT);
+
+// 		JLabel num_EffT = new JLabel("90%");
+// 		num_EffT.setHorizontalAlignment(SwingConstants.CENTER);
+// 		num_EffT.setFont(new Font("Arial", Font.BOLD, 35));
+// 		eff_Trans.add(num_EffT);
+		
+
+// 		// Data List
+// 		JPanel dataT = new JPanel();
+// 		dataT.setPreferredSize(new Dimension((getWidth()/15), 70));
+// //            data.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+// 		dataT.setLayout(new GridLayout(3, 2));
+// 		effAndDataPanelTrans.add(dataT, BorderLayout.EAST);
+		
+// 		JLabel numTransLabel = new JLabel("Transmissão");
+// 		numTransLabel.setFont(new Font("Arial", Font.BOLD, 15));
+// 		dataT.add(numTransLabel);
+		
+// 		JLabel getNumTrans = new JLabel("124563");
+// 		getNumTrans.setFont(new Font("Arial", Font.BOLD, 15));
+// 		dataT.add(getNumTrans);
+
+// 		JLabel projetoLabelT = new JLabel("Projeto");
+// 		projetoLabelT.setFont(new Font("Arial", Font.BOLD, 15));
+// 		dataT.add(projetoLabelT);
+		
+// 		JLabel getProjetoLabelT = new JLabel("B1025");
+// 		getProjetoLabelT.setFont(new Font("Arial", Font.BOLD, 15));
+// 		dataT.add(getProjetoLabelT);
+
+// 		JLabel testeLabelT = new JLabel("Teste");
+// 		testeLabelT.setFont(new Font("Arial", Font.BOLD, 15));
+// 		dataT.add(testeLabelT);
+		
+// 		JLabel getTesteLabelT = new JLabel("DUR112");
+// 		getTesteLabelT.setFont(new Font("Arial", Font.BOLD, 15));
+// 		dataT.add(getTesteLabelT);
+
+// 		motorPanel[18].add(effAndDataPanelTrans, BorderLayout.SOUTH);
+
+		footerPanel.add(spt);
+
+		// -------------------------------------------------------------------------------------------------
+
+		
 
         
-//      COLOCAR AQUI OS GRÁFICOS DE EFICIENCIA E A ASSINATURA NO FOOTER
+//      ASSINATURA NO FOOTER
+		// JPanel Assign = new JPanel();
+		// JLabel AssignTxt = new JLabel("Assinatura Aqui");
+		// // Assign.setPreferredSize(new Dimension(getWidth(), (getHeight() / 6)));
+		// Assign.setBackground(Color.LIGHT_GRAY);
+		// Assign.add(AssignTxt,BorderLayout.EAST);
+		// contentPane.add(Assign);
+
+
 
         allPanel = new JPanel();
         allPanel.setLayout(new GridLayout(3, 6, 10, 10)); // 3 rows, 6 columns
+		allPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         allPanel.setBackground(Color.LIGHT_GRAY);
-        
-        
-
 
         JScrollPane portPanel = new JScrollPane(allPanel);
         contentPane.add(portPanel, BorderLayout.CENTER);
 
      // Add motor data containers to the grid
         for (int i = 0; i < 18; i++) { // 3 rows * 6 columns = 18 containers
-        	int state = getState();	
         	
             motorPanel[i] = new JPanel();
             motorPanel[i].setPreferredSize(new Dimension(200, 200));         
             motorPanel[i].setBorder(BorderFactory.createLineBorder(colorStatus[i], 4)); // 2 é a largura da borda
             motorPanel[i].setLayout(new BorderLayout());
             
-            
-            
-            
-//            for (int j = 0; j < portCount; j++) {
-//    			DiPorts[j] = new DioPortUI(j, roomLabel, location, imageIcon, (byte) 0);
-//    			
-//    		}
-            
-            // Indicação de START CART - 6 a 9
-            
-//            if(i>5 && i<10) {
-//            	
-//            	JPanel identif = new JPanel();
-//            	identif.setLayout(new GridLayout(2, 1));
-//            	identif.setPreferredSize(new Dimension(getWidth(),20));
-//            	motorPanel[i].add(identif);
-//            	
-//            	
-//            	// First row: Room name            
-//                roomLabel[i] = new JLabel(roomName[i]);
-//                roomLabel[i].setHorizontalAlignment(SwingConstants.CENTER);
-//                roomLabel[i].setBorder(BorderFactory.createLineBorder(colorStatus[i], 4));
-//                roomLabel[i].setOpaque(true);
-////                roomLabel.setBackground(Color.LIGHT_GRAY);
-//                roomLabel[i].setFont(new Font("Arial", Font.PLAIN, 35));
-//                identif.add(roomLabel[i], BorderLayout.NORTH);
-//            	
-//            	startCart = new JLabel("START CART");
-//            	startCart.setHorizontalAlignment(SwingConstants.CENTER);
-//            	startCart.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-//            	startCart.setFont(new Font("Arial", Font.ITALIC, 5));
-//            	identif.add(startCart, BorderLayout.CENTER);                
-            
 			 // First row: Room name            
             roomLabel[i] = new JLabel(roomName[i]);
             roomLabel[i].setHorizontalAlignment(SwingConstants.CENTER);
             roomLabel[i].setBorder(BorderFactory.createLineBorder(colorStatus[i], 4));
             roomLabel[i].setOpaque(true);
-			//          roomLabel.setBackground(Color.LIGHT_GRAY);
-        	roomLabel[i].setFont(new Font("Arial", Font.PLAIN, 35));
+			//roomLabel.setBackground(Color.LIGHT_GRAY);
+        	roomLabel[i].setFont(new Font("Arial", Font.PLAIN, 45));
         	motorPanel[i].add(roomLabel[i], BorderLayout.NORTH);
     		
             // Second row: Cause
             causal[i] = Banco.fetchAndDisplayCausal(roomName[i]);
             causeLabel[i] = new JLabel("<html>" + causal[i] + "</html>");
             causeLabel[i].setHorizontalAlignment(SwingConstants.CENTER);
-            causeLabel[i].setFont(new Font("Arial", Font.PLAIN, 25));
+            causeLabel[i].setFont(new Font("Arial", Font.PLAIN, 30));
             motorPanel[i].add(causeLabel[i], BorderLayout.CENTER);
 
             // Third row: EFF and Data List
@@ -409,6 +596,7 @@ public class StaticDI extends JFrame implements ActionListener {
 	        		if(actStateHigh[i-4]==(byte)0) {
 	        			colorStatus[aux2] = Color.GREEN;
 	        			causal[aux2] = "Motor em funcionamento";
+						AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux2++;
 	        		}else {
 	        			colorStatus[aux2] = Color.RED;
@@ -420,6 +608,7 @@ public class StaticDI extends JFrame implements ActionListener {
 	        		if(actStateHigh[i-10]==(byte)0) {
 	        			colorStatus[aux1] = Color.GREEN;
 	        			causal[aux1] = "Motor em funcionamento";
+						AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux1++;
 	        		}else {
 	        			colorStatus[aux1] = Color.RED;

@@ -44,6 +44,8 @@ public class Banco {
     }
 
     public static String  fetchAndDisplayCausal(String roomName) {
+
+        
     	
     	Connection(roomName, "causal");        
         
