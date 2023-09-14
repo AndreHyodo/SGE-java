@@ -5,6 +5,7 @@ import java.awt.*;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Time;
 
@@ -33,11 +34,8 @@ public class Banco {
             	}
                 // System.out.println(roomName + ": " + causal);
             }
-            
-            
-            
-//            for (int i = 0; i < 18; i++) {}
 
+            connection.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
