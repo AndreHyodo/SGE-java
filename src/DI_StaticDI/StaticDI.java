@@ -14,6 +14,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import java.lang.*;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -89,6 +91,9 @@ public class StaticDI extends JFrame implements ActionListener {
 	private JPanel Panel_Eff_Dev[] = new JPanel[12];
 	private JPanel Panel_Eff_Dur[] = new JPanel[12];
 	private JPanel Panel_Eff_SC[] = new JPanel[12];
+
+	private boolean causalOK;
+
 //	public static String colorStatus[] = {"Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black"};
 	
 	public static Color colorStatus[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
@@ -179,17 +184,24 @@ public class StaticDI extends JFrame implements ActionListener {
 		logo.setIcon(iconRedimensionado);
         headerPanel.add(logo);
 
-        JLabel title = new JLabel("Efficiency Management System");
-        title.setFont(new Font("Arial", Font.ITALIC, 40));
-		// title.setBorder(BorderFactory.createLineBorder(Color.green, 4)); // 2 é a largura da borda
-        title.setForeground(new Color(0xf6f7f9));
-        headerPanel.add(title, BorderLayout.LINE_END);
+		JLabel title = new JLabel("Efficiency Management System");
+		title.setFont(new Font("Open Sans Bold", Font.BOLD, 42));
+		title.setForeground(new Color(0xf6f7f9));
+
+		// Crie um JPanel com Layout FlowLayout para acomodar o JLabel
+		JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		titlePanel.setOpaque(false); // Deixa o fundo do JPanel transparente
+		title.setHorizontalAlignment(SwingConstants.RIGHT); // Alinhe o texto à direita
+		titlePanel.add(title);
+
+		headerPanel.add(titlePanel, BorderLayout.LINE_END);
+
 
 		//Logo AutomAH System
-		ImageIcon AutomAH = new ImageIcon(getClass().getResource("logoAutomAH.jpg")); // Carrega a imagem original
+		ImageIcon AutomAH = new ImageIcon(getClass().getResource("logoAutomAH.png")); // Carrega a imagem original
 		// Define as dimensões desejadas para a imagem
-		int larguraDesejadaLogo = 180; // Substitua pelo valor desejado
-		int alturaDesejadaLogo = 65; // Substitua pelo valor desejado
+		int larguraDesejadaLogo = 240; // Substitua pelo valor desejado
+		int alturaDesejadaLogo = 70; // Substitua pelo valor desejado
 		// Redimensiona a imagem original para as dimensões desejadas
 		Image imagemRedimensionada2 = AutomAH.getImage().getScaledInstance(larguraDesejadaLogo, alturaDesejadaLogo, Image.SCALE_SMOOTH);
 		// Cria um novo ImageIcon com a imagem redimensionada
@@ -201,6 +213,8 @@ public class StaticDI extends JFrame implements ActionListener {
 
 		// Cria um painel para o logo2 e define o layout como FlowLayout com alinhamento à direita
 		JPanel logoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		FlowLayout layout = (FlowLayout)logoPanel.getLayout();
+        layout.setVgap(0);
 		logoPanel.setBackground(new Color(0x24405d));
 		logoPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
 		logoPanel.add(logo2);
@@ -208,11 +222,11 @@ public class StaticDI extends JFrame implements ActionListener {
 		// Adiciona o painel do logo2 ao headerPanel
 		headerPanel.add(logoPanel, BorderLayout.EAST);
 
-		JPanel footerPanel = new JPanel(new GridLayout(1, 4));
-		footerPanel.setPreferredSize(new Dimension(getWidth(), (getHeight() / 8)));
+		JPanel footerPanel = new JPanel();
+		footerPanel.setLayout(new GridLayout(1, 4, 0, 0));
 		footerPanel.setBackground(Color.LIGHT_GRAY);
 		contentPane.add(footerPanel, BorderLayout.SOUTH);
-		
+				
 
 		// JPanel histDUR = new JPanel(new GridLayout(2,12));
         // footerPanel.add(histDUR, BorderLayout.LINE_END);
@@ -220,7 +234,7 @@ public class StaticDI extends JFrame implements ActionListener {
 		// HISTÓRICO DESENVOLVIMENTO -----------------------------------------------------------------------------------
 
 		JPanel histDEV = new JPanel();
-		histDEV.setBorder(BorderFactory.createLineBorder(colorStatus[18], 1)); // 2 é a largura da borda       
+		histDEV.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda       
 		histDEV.setBorder(new EmptyBorder(0, 0, 0, 20));
 		histDEV.setLayout(new BorderLayout());
 		histDEV.setBackground(Color.LIGHT_GRAY);
@@ -240,7 +254,7 @@ public class StaticDI extends JFrame implements ActionListener {
 
 		for(int i=0;i<12;i++){
 			Panel_Eff_Dev[i] = new JPanel();      
-            Panel_Eff_Dev[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DEV[i], 2)); // 2 é a largura da borda
+            Panel_Eff_Dev[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DEV[i], 1)); // 2 é a largura da borda
             Panel_Eff_Dev[i].setLayout(new BorderLayout());
 
 			Label_months_DEV[i] = new JLabel(months[i]);      
@@ -266,7 +280,7 @@ public class StaticDI extends JFrame implements ActionListener {
 		// HISTÓRICO DURABILIDADE -----------------------------------------------------------------------------------
 
 		JPanel histDUR = new JPanel();       
-		histDUR.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda
+		histDUR.setBorder(BorderFactory.createLineBorder(colorStatus[18], 1)); // 2 é a largura da borda
 		histDEV.setBorder(new EmptyBorder(0, 0, 0, 20));
 		histDUR.setLayout(new BorderLayout());
 		histDUR.setBackground(Color.LIGHT_GRAY);
@@ -627,7 +641,7 @@ public class StaticDI extends JFrame implements ActionListener {
 //		headerPanel.setPreferredSize(new Dimension(350, 48 * portCount));
 
 		if (timer == null) {
-			timer = new Timer(100, this);
+			timer = new Timer(1000, this);
 		}
 		timer.start();
 	}
@@ -663,8 +677,15 @@ public class StaticDI extends JFrame implements ActionListener {
 	        			AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux2++;
 	        		}else {
-	        			colorStatus[aux2] = Color.RED;
-	        			causal[aux2] = Banco.fetchAndDisplayCausal(roomName[i]);
+						causalOK = AjustaCausal.AguardandoCausal(roomName[i]);
+						if(causalOK==true){
+							colorStatus[aux2] = Color.RED;
+							causal[aux2] = Banco.fetchAndDisplayCausal(roomName[i]);
+						}else{
+							colorStatus[aux2] = Color.YELLOW;
+							causal[aux2] = "Aguardando Causal";
+						}
+	        			
 	        			aux2++;
 	        		}
 //	        		System.out.print("\n High channel: "+ i + " = " +actStateHigh[i] + " ");
@@ -675,8 +696,14 @@ public class StaticDI extends JFrame implements ActionListener {
 						AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux2++;
 	        		}else {
-	        			colorStatus[aux2] = Color.RED;
-	        			causal[aux2] = Banco.fetchAndDisplayCausal(roomName[i]);
+	        			causalOK = AjustaCausal.AguardandoCausal(roomName[i]);
+						if(causalOK==true){
+							colorStatus[aux2] = Color.RED;
+							causal[aux2] = Banco.fetchAndDisplayCausal(roomName[i]);
+						}else{
+							colorStatus[aux2] = Color.YELLOW;
+							causal[aux2] = "Aguardando Causal";
+						}
 	        			aux2++;
 	        		}
 //					System.out.print("\n Low channel: "+ i + " = " +actStateLow[i-10] + " ");
@@ -687,8 +714,14 @@ public class StaticDI extends JFrame implements ActionListener {
 						AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux1++;
 	        		}else {
-	        			colorStatus[aux1] = Color.RED;
-	        			causal[aux1] = Banco.fetchAndDisplayCausal(roomName[i]);
+	        			causalOK = AjustaCausal.AguardandoCausal(roomName[i]);
+						if(causalOK==true){
+							colorStatus[aux1] = Color.RED;
+							causal[aux1] = Banco.fetchAndDisplayCausal(roomName[i]);
+						}else{
+							colorStatus[aux1] = Color.YELLOW;
+							causal[aux1] = "Aguardando Causal";
+						}
 	        			aux1++;
 	        		}
 //					System.out.print("\n Low channel: "+ i + " = " +actStateLow[i-10] + " ");
