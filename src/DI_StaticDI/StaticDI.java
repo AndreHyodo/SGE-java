@@ -671,16 +671,17 @@ public class StaticDI extends JFrame implements ActionListener {
 			for (int i = 17; i >= 0; i--) { // 3 rows * 6 columns = 18 containers
 //	        	int state = getState();
 	        	if(i<4) {
+					// System.out.println("\n-----------ActStateLow[" + (i+4) + "] : " + roomName[room] + "-> aux2: " + aux2);
 	        		if(actStateLow[i+4]== (byte)0) {
 	        			colorStatus[aux2] = Color.GREEN;
 	        			causal[aux2] = "Motor em funcionamento";
 	        			AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux2++;
 	        		}else {
-						causalOK = AjustaCausal.AguardandoCausal(roomName[i]);
+						causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
 						if(causalOK==true){
 							colorStatus[aux2] = Color.RED;
-							causal[aux2] = Banco.fetchAndDisplayCausal(roomName[i]);
+							causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
 						}else{
 							colorStatus[aux2] = Color.YELLOW;
 							causal[aux2] = "Aguardando Causal";
@@ -690,16 +691,17 @@ public class StaticDI extends JFrame implements ActionListener {
 	        		}
 //	        		System.out.print("\n High channel: "+ i + " = " +actStateHigh[i] + " ");
 	        	}else if(i>=4 && i<6){
+					// System.out.println("\n-----------ActStateHigh[" + (i-4) + "] : " + roomName[room] + "-> aux2: " + aux2);
 	        		if(actStateHigh[i-4]==(byte)0) {
 	        			colorStatus[aux2] = Color.GREEN;
 	        			causal[aux2] = "Motor em funcionamento";
 						AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux2++;
 	        		}else {
-	        			causalOK = AjustaCausal.AguardandoCausal(roomName[i]);
+	        			causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
 						if(causalOK==true){
 							colorStatus[aux2] = Color.RED;
-							causal[aux2] = Banco.fetchAndDisplayCausal(roomName[i]);
+							causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
 						}else{
 							colorStatus[aux2] = Color.YELLOW;
 							causal[aux2] = "Aguardando Causal";
@@ -708,16 +710,17 @@ public class StaticDI extends JFrame implements ActionListener {
 	        		}
 //					System.out.print("\n Low channel: "+ i + " = " +actStateLow[i-10] + " ");
 	        	}else if(i>11){
+					// System.out.println("\n-----------ActStateHigh[" + (i-10) + "] : " + roomName[room] + "-> aux1: " + aux1);
 	        		if(actStateHigh[i-10]==(byte)0) {
 	        			colorStatus[aux1] = Color.GREEN;
 	        			causal[aux1] = "Motor em funcionamento";
 						AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux1++;
 	        		}else {
-	        			causalOK = AjustaCausal.AguardandoCausal(roomName[i]);
+	        			causalOK = AjustaCausal.AguardandoCausal(roomName[room],i, aux1, aux2);
 						if(causalOK==true){
 							colorStatus[aux1] = Color.RED;
-							causal[aux1] = Banco.fetchAndDisplayCausal(roomName[i]);
+							causal[aux1] = Banco.fetchAndDisplayCausal(roomName[room]);
 						}else{
 							colorStatus[aux1] = Color.YELLOW;
 							causal[aux1] = "Aguardando Causal";
