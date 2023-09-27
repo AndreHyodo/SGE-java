@@ -136,16 +136,18 @@ public class AjustaCausal {
 
             // System.out.println("\n----------Aqui dif date : " + diffDate.get(ChronoUnit.DAYS));
             
-            if(stringAtualData != stringSqlDate){
-                ret = true;
-            }else{
-                if(diff.get(ChronoUnit.SECONDS) > 30){
+            if(stringSqlDate.equalsIgnoreCase(stringAtualData)){
+                if(diff.get(ChronoUnit.SECONDS) > 300){
+                    System.out.println("\n Iguais ---- " + ETB + ":ATUAL = " + stringAtualData + "\tSQL = " + stringSqlDate);
                     System.out.println("\n----------Aqui ret = true : " + diff.get(ChronoUnit.SECONDS));
                     ret = true;
                 }else{
                     System.out.println("\n----------Aqui ret = false : " + diff.get(ChronoUnit.SECONDS));
                     ret = false;
                 }
+            }else{
+                System.out.println("\n Diferentes ---- " + ETB + ": ATUAL = " + stringAtualData + "\tSQL = " + stringSqlDate);
+                ret = true;
             }
 
             
