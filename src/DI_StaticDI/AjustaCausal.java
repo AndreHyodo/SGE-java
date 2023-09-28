@@ -142,11 +142,11 @@ public class AjustaCausal {
                     System.out.println("\n----------Aqui ret = true : " + diff.get(ChronoUnit.SECONDS));
                     ret = true;
                 }else{
-                    System.out.println("\n----------Aqui ret = false : " + diff.get(ChronoUnit.SECONDS));
+                    System.out.println("\n----" + ETB + "------Aqui ret = false : " + diff.get(ChronoUnit.SECONDS));
                     ret = false;
                 }
             }else{
-                System.out.println("\n Diferentes ---- " + ETB + ": ATUAL = " + stringAtualData + "\tSQL = " + stringSqlDate);
+                // System.out.println("\n Diferentes ---- " + ETB + ": ATUAL = " + stringAtualData + "\tSQL = " + stringSqlDate);
                 ret = true;
             }
 
@@ -162,6 +162,99 @@ public class AjustaCausal {
         return ret;
     }
 	
+
+    public static boolean VerificaCausal(String ETB) {
+
+        boolean ok=false;
+		
+		java.sql.PreparedStatement preparedStatement;
+
+        try (Connection connection = DriverManager.getConnection(Banco.JDBC_URL, Banco.USER, Banco.PASSWORD)) {
+        	
+        	Time sqlhora_final = null;
+        	
+        	Statement statement = connection.createStatement();
+            
+            String query = "SELECT hora_final FROM " + ETB + " ORDER BY id DESC LIMIT 1";
+
+            ResultSet resultSet = statement.executeQuery(query);
+
+            if (resultSet.next()) {
+            	sqlhora_final = resultSet.getTime("hora_final");
+            }
+            
+            LocalTime horaZero = LocalTime.MIDNIGHT;
+            Time zero = Time.valueOf(horaZero);
+            
+            LocalTime horaAtual = LocalTime.now();
+
+            // Converter LocalTime para Time
+            Time sqlHoraAtual = Time.valueOf(horaAtual);
+            
+            // System.out.print(ETB + ": Hora final: " + sqlhora_final + "\n"+ ETB +": Hora atual: " + sqlHoraAtual + "\n");
+
+            if (sqlhora_final.equals(zero)){
+                System.out.println("\nSala " + ETB + " já registrou causal ---- " + sqlhora_final);
+                ok = true;
+            }else{
+                System.out.println("\nSala " + ETB + " está aguardando causal ---- " + sqlhora_final);
+                ok = false;
+            }
+
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return ok;
+	}
+
+    public static void FaltaOperador(String ETB) {
+        // Create a PreparedStatement to insert the new row into the database.
+        java.sql.PreparedStatement preparedStatement = null;
+
+        // Connect to the database.
+        try (Connection connection = DriverManager.getConnection(Banco.JDBC_URL, Banco.USER, Banco.PASSWORD)) {
+
+            String FaltaCausal = "Ausência de Operador";
+            String obsCausal = "Operador não registrou causal dentro de 5 minutos.";
+
+            // Get the current time and date.
+            LocalTime horaAtual = LocalTime.now();
+            LocalDate dataAtual = LocalDate.now();
+
+            // Create a Date object from the current date.
+            Date DatetypeAtual = Date.valueOf(dataAtual);
+
+            // Create a Time object from the current time.
+            Time sqlHoraAtual = Time.valueOf(horaAtual);
+
+            Time time = Time.valueOf("00:00:00");
+
+            // Create the SQL query to insert the new row.
+            String query = "INSERT INTO " + ETB +" (`TestCell`, `causal`, `hora_inicio`, `hora_final` , `obs`, `date`) VALUES (?, ?, ?, ?, ?, ?)";
+
+            // Prepare the statement.
+            preparedStatement = connection.prepareStatement(query);
+
+            preparedStatement.setString(1, "A04");
+            preparedStatement.setString(2, FaltaCausal);
+            preparedStatement.setTime(3, sqlHoraAtual);
+            preparedStatement.setTime(4, time);
+            preparedStatement.setString(5, obsCausal);
+            preparedStatement.setDate(6, DatetypeAtual);
+
+            // Execute the statement.
+            preparedStatement.executeUpdate();
+
+            preparedStatement.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    
 }
 
 

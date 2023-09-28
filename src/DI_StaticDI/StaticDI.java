@@ -93,6 +93,7 @@ public class StaticDI extends JFrame implements ActionListener {
 	private JPanel Panel_Eff_SC[] = new JPanel[12];
 
 	private boolean causalOK;
+	private boolean registroCausalOK;
 
 //	public static String colorStatus[] = {"Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black"};
 	
@@ -104,6 +105,7 @@ public class StaticDI extends JFrame implements ActionListener {
 	
 	public static Color colorStatusEFF_SC[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
 	
+	public static int TimerETB[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	String color = "BLACK";
 	
 	public static byte[] actStateHigh = new byte[8];
@@ -660,6 +662,10 @@ public class StaticDI extends JFrame implements ActionListener {
 		}
 		int portCountAct;
 		ErrorCode errorCode = instantDiCtrl.Read(0, portCount, data);
+
+		for(int i=0; i<19; i++){
+			TimerETB[i]++;
+		}
 		
 		if (!Global.BioFaild(errorCode)) {
 			for (int b = 0; b < portCount; b++) {
@@ -673,38 +679,65 @@ public class StaticDI extends JFrame implements ActionListener {
 	        	if(i<4) {
 					// System.out.println("\n-----------ActStateLow[" + (i+4) + "] : " + roomName[room] + "-> aux2: " + aux2);
 	        		if(actStateLow[i+4]== (byte)0) {
+						TimerETB[aux2]=0;
 	        			colorStatus[aux2] = Color.GREEN;
 	        			causal[aux2] = "Motor em funcionamento";
 	        			AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux2++;
 	        		}else {
+						//registroCausalOK -> true = ultimo causal em aberto ----- false = ultimo causal já fechado
+						registroCausalOK = AjustaCausal.VerificaCausal(roomName[room]);
+						// causalOK -> false = mais de 300s do registro do causal
 						causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
-						if(causalOK==true){
-							colorStatus[aux2] = Color.RED;
-							causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
-						}else{
+
+						if(TimerETB[aux2]<300){
 							colorStatus[aux2] = Color.YELLOW;
-							causal[aux2] = "Aguardando Causal";
+							if(registroCausalOK == true){
+								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
+							}else{
+								causal[aux2] = "Aguardando Causal";
+							}
+						}else{
+							colorStatus[aux2] = Color.RED;
+							if(registroCausalOK == true){
+								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
+							}else{
+								AjustaCausal.FaltaOperador(roomName[room]);
+								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
+							}
 						}
-	        			
 	        			aux2++;
 	        		}
 //	        		System.out.print("\n High channel: "+ i + " = " +actStateHigh[i] + " ");
 	        	}else if(i>=4 && i<6){
 					// System.out.println("\n-----------ActStateHigh[" + (i-4) + "] : " + roomName[room] + "-> aux2: " + aux2);
 	        		if(actStateHigh[i-4]==(byte)0) {
+						TimerETB[aux2]=0;
 	        			colorStatus[aux2] = Color.GREEN;
 	        			causal[aux2] = "Motor em funcionamento";
 						AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux2++;
 	        		}else {
-	        			causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
-						if(causalOK==true){
-							colorStatus[aux2] = Color.RED;
-							causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
-						}else{
+						//registroCausalOK -> true = ultimo causal em aberto ----- flase = ultimo causal já fechado
+						registroCausalOK = AjustaCausal.VerificaCausal(roomName[room]);
+						// causalOK -> false = mais de 300s do registro do causal
+						causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
+
+						if(TimerETB[aux2]<300){
 							colorStatus[aux2] = Color.YELLOW;
-							causal[aux2] = "Aguardando Causal";
+							if(registroCausalOK == true){
+								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
+							}else{
+								causal[aux2] = "Aguardando Causal";
+							}
+						}else{
+							colorStatus[aux2] = Color.RED;
+							if(registroCausalOK == true){
+								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
+							}else{
+								AjustaCausal.FaltaOperador(roomName[room]);
+								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
+							}
 						}
 	        			aux2++;
 	        		}
@@ -712,18 +745,32 @@ public class StaticDI extends JFrame implements ActionListener {
 	        	}else if(i>11){
 					// System.out.println("\n-----------ActStateHigh[" + (i-10) + "] : " + roomName[room] + "-> aux1: " + aux1);
 	        		if(actStateHigh[i-10]==(byte)0) {
+						TimerETB[aux1]=0;
 	        			colorStatus[aux1] = Color.GREEN;
 	        			causal[aux1] = "Motor em funcionamento";
 						AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux1++;
 	        		}else {
-	        			causalOK = AjustaCausal.AguardandoCausal(roomName[room],i, aux1, aux2);
-						if(causalOK==true){
-							colorStatus[aux1] = Color.RED;
-							causal[aux1] = Banco.fetchAndDisplayCausal(roomName[room]);
-						}else{
+						//registroCausalOK -> true = ultimo causal em aberto ----- false = ultimo causal já fechado
+						registroCausalOK = AjustaCausal.VerificaCausal(roomName[room]);
+						// causalOK -> false = mais de 300s do registro do causal
+						causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
+
+						if(TimerETB[aux1]<300){
 							colorStatus[aux1] = Color.YELLOW;
-							causal[aux1] = "Aguardando Causal";
+							if(registroCausalOK == true){
+								causal[aux1] = Banco.fetchAndDisplayCausal(roomName[room]);
+							}else{
+								causal[aux1] = "Aguardando Causal";
+							}
+						}else{
+							colorStatus[aux1] = Color.RED;
+							if(registroCausalOK == true){
+								causal[aux1] = Banco.fetchAndDisplayCausal(roomName[room]);
+							}else{
+								AjustaCausal.FaltaOperador(roomName[room]);
+								causal[aux1] = Banco.fetchAndDisplayCausal(roomName[room]);
+							}
 						}
 	        			aux1++;
 	        		}
