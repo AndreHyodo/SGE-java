@@ -138,11 +138,11 @@ public class AjustaCausal {
             
             if(stringSqlDate.equalsIgnoreCase(stringAtualData)){
                 if(diff.get(ChronoUnit.SECONDS) > 300){
-                    System.out.println("\n Iguais ---- " + ETB + ":ATUAL = " + stringAtualData + "\tSQL = " + stringSqlDate);
-                    System.out.println("\n----------Aqui ret = true : " + diff.get(ChronoUnit.SECONDS));
+                    // System.out.println("\n Iguais ---- " + ETB + ":ATUAL = " + stringAtualData + "\tSQL = " + stringSqlDate);
+                    // System.out.println("\n----------Aqui ret = true : " + diff.get(ChronoUnit.SECONDS));
                     ret = true;
                 }else{
-                    System.out.println("\n----" + ETB + "------Aqui ret = false : " + diff.get(ChronoUnit.SECONDS));
+                    // System.out.println("\n----" + ETB + "------Aqui ret = false : " + diff.get(ChronoUnit.SECONDS));
                     ret = false;
                 }
             }else{
