@@ -78,6 +78,7 @@ public class StaticDI extends JFrame implements ActionListener {
 	private JPanel Panel_Eff_Dur[] = new JPanel[12];
 	private JPanel Panel_Eff_SC[] = new JPanel[12];
 
+	public boolean causalOK;
 	private boolean registroCausalOK;
 
 	public static Color colorStatus[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
