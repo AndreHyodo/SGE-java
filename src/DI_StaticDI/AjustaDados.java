@@ -15,7 +15,6 @@ import javax.swing.JOptionPane;
 
 import javafx.scene.control.Cell;
 
-import java.util.Scanner;
 
 public class AjustaDados {
 

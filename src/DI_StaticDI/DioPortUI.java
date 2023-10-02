@@ -1,16 +1,12 @@
 package DI_StaticDI;
 
-import java.awt.Color;
 import java.awt.Point;
-import java.awt.SystemColor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 public class DioPortUI extends JPanel{
 	// define the serialization number.
@@ -38,29 +34,6 @@ public class DioPortUI extends JPanel{
 		key = index;
 		this.state = state;
 		imageIcon = image;
-
-//		lblPortIndex.setBounds(location.x, location.y + 6, 25, 23);
-//		lblPortIndex.setHorizontalAlignment(SwingConstants.CENTER);
-//		lblPortIndex.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-//		lblPortIndex.setText(String.valueOf(key));
-//		parrent.add(lblPortIndex);
-
-//		highBytes.setBounds(location.x, location.y, 125, 35);
-//		highBytes.setLayout(null);
-//		highBytes.setBackground(SystemColor.control);
-//		highBytes.setBorder(BorderFactory.createLineBorder(Color.gray));
-//		parrent.add(highBytes);
-
-//		lowBytes.setBounds(location.x, location.y + 35, 125, 35);
-//		lowBytes.setLayout(null);
-//		lowBytes.setBackground(SystemColor.control);
-//		lowBytes.setBorder(BorderFactory.createLineBorder(Color.gray));
-//		parrent.add(lowBytes);
-
-//		lblHexValue.setBounds(location.x + 200, location.y + 6, 35, 23);
-//		lblHexValue.setHorizontalAlignment(SwingConstants.CENTER);
-//		lblHexValue.setBorder(BorderFactory.createLineBorder(Color.gray));
-//		parrent.add(lblHexValue);
 
 		for (int a = 0; a < 4; a++) {
 			bytesLevel[a] = new JLabel(imageIcon[(state >> a) & 0x1]);

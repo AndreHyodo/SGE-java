@@ -1,7 +1,5 @@
 package DI_StaticDI;
 
-import Common.*;
-
 import java.sql.Time;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
@@ -127,10 +125,8 @@ public class AjustaCausal {
             Time zero = Time.valueOf(horaZero);
 
             if (sqlhora_final.equals(zero)){
-                System.out.println("\nSala " + ETB + " já registrou causal ---- " + sqlhora_final);
                 ok = true;
             }else{
-                System.out.println("\nSala " + ETB + " está aguardando causal ---- " + sqlhora_final);
                 ok = false;
             }
 
