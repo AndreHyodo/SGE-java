@@ -13,17 +13,31 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+
+import java.lang.*;
+
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+// import javax.swing.JButton;
+// import javax.swing.border.LineBorder;
 import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
+// import javax.swing.UIManager;
+// import javax.swing.border.EmptyBorder;
+// import java.awt.SystemColor;
+// import java.awt.Taskbar.State;
 import javax.swing.border.EmptyBorder;
 
+// import DI_StaticDI.Banco;
+// import DI_StaticDI.AjustaCausal;
+// import DI_StaticDI.StaticDI.ButtonConfigureActionListener;
+// import DI_StaticDI.StaticDI.WindowCloseActionListener;
+// import DI_StaticDI.ColorStatus.*;
 import Automation.BDaq.DeviceInformation;
 import Automation.BDaq.ErrorCode;
 import Automation.BDaq.InstantDiCtrl;
@@ -45,7 +59,11 @@ public class StaticDI extends JFrame implements ActionListener {
 	private JPanel motorPanel[] = new JPanel[19];
 	private JLabel causeLabel[] = new JLabel[19];
 	private JLabel StartCart_id[] = new JLabel[4];
+	private JLabel StoppedTimeTotal[] = new JLabel[15];
+	private JLabel StoppedTimeAtual[] = new JLabel[15];
+	private JPanel RunPanel[] = new JPanel[15];
 	private JPanel TitleSC[] = new JPanel[4];
+	private JPanel Title[] = new JPanel[15];
 	
 	public ImageIcon[] imageIcon = { 
 			new BackgroundPanel("ledLow.png", "Low").getImageIcon(),
@@ -78,9 +96,10 @@ public class StaticDI extends JFrame implements ActionListener {
 	private JPanel Panel_Eff_Dur[] = new JPanel[12];
 	private JPanel Panel_Eff_SC[] = new JPanel[12];
 
-	public boolean causalOK;
-	private boolean registroCausalOK;
+	private boolean causalOK;
 
+//	public static String colorStatus[] = {"Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black", "Black"};
+	
 	public static Color colorStatus[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
 
 	public static Color colorStatusEFF_DEV[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
@@ -89,12 +108,12 @@ public class StaticDI extends JFrame implements ActionListener {
 	
 	public static Color colorStatusEFF_SC[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
 	
-	public static int TimerETB[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	String color = "BLACK";
 	
 	public static byte[] actStateHigh = new byte[8];
 	public static byte[] actStateLow = new byte[8];
 	
+//	public static int portCount;
 
 	JPanel painel[] = new JPanel[18];
 
@@ -127,6 +146,12 @@ public class StaticDI extends JFrame implements ActionListener {
 	 */
 	public StaticDI() {
 		portCount = instantDiCtrl.getPortCount();
+		
+//		try {
+//            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -146,14 +171,19 @@ public class StaticDI extends JFrame implements ActionListener {
         headerPanel.setBackground(new Color(0x24405d));
 		headerPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
         contentPane.add(headerPanel, BorderLayout.NORTH); 
+        
 
-		//LOGO STELLANTIS
-		ImageIcon originalIcon = new ImageIcon(getClass().getResource("logoStellantis.png")); 
-		int larguraDesejada = 200; 
-		int alturaDesejada = 100; 
+//		COLOCAR AQUI A LOGO STELLANTIS E A LOGO AUTOMAH SYSTEM
+		ImageIcon originalIcon = new ImageIcon(getClass().getResource("logoStellantis.png")); // Carrega a imagem original
+		// Define as dimensões desejadas para a imagem
+		int larguraDesejada = 200; // Substitua pelo valor desejado
+		int alturaDesejada = 100; // Substitua pelo valor desejado
+		// Redimensiona a imagem original para as dimensões desejadas
 		Image imagemRedimensionada = originalIcon.getImage().getScaledInstance(larguraDesejada, alturaDesejada, Image.SCALE_SMOOTH);
+		// Cria um novo ImageIcon com a imagem redimensionada
 		ImageIcon iconRedimensionado = new ImageIcon(imagemRedimensionada);
 
+		// Cria o JLabel e define o ícone redimensionado
 		JLabel logo = new JLabel();
 		logo.setIcon(iconRedimensionado);
         headerPanel.add(logo);
@@ -162,23 +192,30 @@ public class StaticDI extends JFrame implements ActionListener {
 		title.setFont(new Font("Open Sans Bold", Font.BOLD, 42));
 		title.setForeground(new Color(0xf6f7f9));
 
+		// Crie um JPanel com Layout FlowLayout para acomodar o JLabel
 		JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		titlePanel.setOpaque(false); 
-		title.setHorizontalAlignment(SwingConstants.RIGHT); 
+		titlePanel.setOpaque(false); // Deixa o fundo do JPanel transparente
+		title.setHorizontalAlignment(SwingConstants.RIGHT); // Alinhe o texto à direita
 		titlePanel.add(title);
 
 		headerPanel.add(titlePanel, BorderLayout.LINE_END);
 
+
 		//Logo AutomAH System
-		ImageIcon AutomAH = new ImageIcon(getClass().getResource("logoAutomAH.png")); 
-		int larguraDesejadaLogo = 240; 
-		int alturaDesejadaLogo = 70; 
+		ImageIcon AutomAH = new ImageIcon(getClass().getResource("logoAutomAH.png")); // Carrega a imagem original
+		// Define as dimensões desejadas para a imagem
+		int larguraDesejadaLogo = 240; // Substitua pelo valor desejado
+		int alturaDesejadaLogo = 70; // Substitua pelo valor desejado
+		// Redimensiona a imagem original para as dimensões desejadas
 		Image imagemRedimensionada2 = AutomAH.getImage().getScaledInstance(larguraDesejadaLogo, alturaDesejadaLogo, Image.SCALE_SMOOTH);
+		// Cria um novo ImageIcon com a imagem redimensionada
 		ImageIcon iconRedimensionadoLogo = new ImageIcon(imagemRedimensionada2);
 
+		// Cria o JLabel e define o ícone redimensionado
 		JLabel logo2 = new JLabel();
 		logo2.setIcon(iconRedimensionadoLogo);
 
+		// Cria um painel para o logo2 e define o layout como FlowLayout com alinhamento à direita
 		JPanel logoPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		FlowLayout layout = (FlowLayout)logoPanel.getLayout();
         layout.setVgap(0);
@@ -186,24 +223,31 @@ public class StaticDI extends JFrame implements ActionListener {
 		logoPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
 		logoPanel.add(logo2);
 
+		// Adiciona o painel do logo2 ao headerPanel
 		headerPanel.add(logoPanel, BorderLayout.EAST);
 
 		JPanel footerPanel = new JPanel();
 		footerPanel.setLayout(new GridLayout(1, 4, 0, 0));
 		footerPanel.setBackground(Color.LIGHT_GRAY);
 		contentPane.add(footerPanel, BorderLayout.SOUTH);
+				
+
+		// JPanel histDUR = new JPanel(new GridLayout(2,12));
+        // footerPanel.add(histDUR, BorderLayout.LINE_END);
 
 		// HISTÓRICO DESENVOLVIMENTO -----------------------------------------------------------------------------------
 
 		JPanel histDEV = new JPanel();
-		histDEV.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2));  
+		histDEV.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda       
 		histDEV.setBorder(new EmptyBorder(0, 0, 0, 20));
 		histDEV.setLayout(new BorderLayout());
 		histDEV.setBackground(Color.LIGHT_GRAY);
 
 		JLabel name_histDEV = new JLabel("Desenvolvimento");
 		name_histDEV.setHorizontalAlignment(SwingConstants.CENTER);
+		// name_histDEV.setBorder(BorderFactory.createLineBorder(colorStatus[18], 1));
 		name_histDEV.setOpaque(true);
+		//roomLabel.setBackground(Color.LIGHT_GRAY);
 		name_histDEV.setFont(new Font("Arial", Font.PLAIN, 30));
 		histDEV.add(name_histDEV, BorderLayout.NORTH);
 
@@ -214,10 +258,11 @@ public class StaticDI extends JFrame implements ActionListener {
 
 		for(int i=0;i<12;i++){
 			Panel_Eff_Dev[i] = new JPanel();      
-            Panel_Eff_Dev[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DEV[i], 1)); 
+            Panel_Eff_Dev[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DEV[i], 1)); // 2 é a largura da borda
             Panel_Eff_Dev[i].setLayout(new BorderLayout());
 
 			Label_months_DEV[i] = new JLabel(months[i]);      
+            // Label_months_DEV[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DEV[i], 1)); // 2 é a largura da borda
             Label_months_DEV[i].setHorizontalAlignment(SwingConstants.CENTER);
 			Label_months_DEV[i].setFont(new Font("Arial", Font.PLAIN, 15));
             Label_months_DEV[i].setLayout(new BorderLayout());
@@ -239,14 +284,16 @@ public class StaticDI extends JFrame implements ActionListener {
 		// HISTÓRICO DURABILIDADE -----------------------------------------------------------------------------------
 
 		JPanel histDUR = new JPanel();       
-		histDUR.setBorder(BorderFactory.createLineBorder(colorStatus[18], 1)); 
+		histDUR.setBorder(BorderFactory.createLineBorder(colorStatus[18], 1)); // 2 é a largura da borda
 		histDEV.setBorder(new EmptyBorder(0, 0, 0, 20));
 		histDUR.setLayout(new BorderLayout());
 		histDUR.setBackground(Color.LIGHT_GRAY);
 
 		JLabel name_histDUR = new JLabel("Durabilidade");
 		name_histDUR.setHorizontalAlignment(SwingConstants.CENTER);
+		// name_histDUR.setBorder(BorderFactory.createLineBorder(colorStatus[18], 1));
 		name_histDUR.setOpaque(true);
+		//roomLabel.setBackground(Color.LIGHT_GRAY);
 		name_histDUR.setFont(new Font("Arial", Font.PLAIN, 30));
 		histDUR.add(name_histDUR, BorderLayout.NORTH);
 
@@ -257,10 +304,11 @@ public class StaticDI extends JFrame implements ActionListener {
 
 		for(int i=0;i<12;i++){
 			Panel_Eff_Dur[i] = new JPanel();      
-            Panel_Eff_Dur[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DUR[i], 1)); 
+            Panel_Eff_Dur[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DUR[i], 1)); // 2 é a largura da borda
             Panel_Eff_Dur[i].setLayout(new BorderLayout());
 
 			Label_months_DUR[i] = new JLabel(months[i]);      
+            // Label_months_DUR[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_DUR[i], 1)); // 2 é a largura da borda
             Label_months_DUR[i].setHorizontalAlignment(SwingConstants.CENTER);
 			Label_months_DUR[i].setFont(new Font("Arial", Font.PLAIN, 15));
             Label_months_DUR[i].setLayout(new BorderLayout());
@@ -280,14 +328,16 @@ public class StaticDI extends JFrame implements ActionListener {
 		// HISTÓRICO STARTCART -----------------------------------------------------------------------------------
 
 		JPanel histSC = new JPanel();       
-		histSC.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); 
+		histSC.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda
 		histSC.setBorder(new EmptyBorder(0, 20, 0, 20));
 		histSC.setLayout(new BorderLayout());
 		histSC.setBackground(Color.LIGHT_GRAY);
 
 		JLabel name_histSC = new JLabel("Start Cart");
 		name_histSC.setHorizontalAlignment(SwingConstants.CENTER);
+		// name_histSC.setBorder(BorderFactory.createLineBorder(colorStatus[18], 1));
 		name_histSC.setOpaque(true);
+		//roomLabel.setBackground(Color.LIGHT_GRAY);
 		name_histSC.setFont(new Font("Arial", Font.PLAIN, 30));
 		histSC.add(name_histSC, BorderLayout.NORTH);
 
@@ -298,10 +348,11 @@ public class StaticDI extends JFrame implements ActionListener {
 
 		for(int i=0;i<12;i++){
 			Panel_Eff_SC[i] = new JPanel();      
-            Panel_Eff_SC[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_SC[i], 1)); 
+            Panel_Eff_SC[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_SC[i], 1)); // 2 é a largura da borda
             Panel_Eff_SC[i].setLayout(new BorderLayout());
 
 			Label_months_SC[i] = new JLabel(months[i]);      
+            // Label_months_SC[i].setBorder(BorderFactory.createLineBorder(colorStatusEFF_SC[i], 1)); // 2 é a largura da borda
             Label_months_SC[i].setHorizontalAlignment(SwingConstants.CENTER);
 			Label_months_SC[i].setFont(new Font("Arial", Font.PLAIN, 15));
             Label_months_SC[i].setLayout(new BorderLayout());
@@ -322,7 +373,7 @@ public class StaticDI extends JFrame implements ActionListener {
 		// SALA PROVA TRANSMISSOES -----------------------------------------------------------------------------------
 
 		spt = new JPanel();        
-		spt.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); 
+		spt.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2)); // 2 é a largura da borda
 		spt.setLayout(new BorderLayout());
 		
 		
@@ -333,6 +384,7 @@ public class StaticDI extends JFrame implements ActionListener {
 		room_spt.setHorizontalAlignment(SwingConstants.CENTER);
 		room_spt.setBorder(BorderFactory.createLineBorder(colorStatus[18], 2));
 		room_spt.setOpaque(true);
+		//roomLabel.setBackground(Color.LIGHT_GRAY);
 		room_spt.setFont(new Font("Arial", Font.PLAIN, 20));
 
 		// EFF
@@ -373,6 +425,14 @@ public class StaticDI extends JFrame implements ActionListener {
 		JPanel effAndDataPanelTrans = new JPanel();
 		effAndDataPanelTrans.setLayout(new GridLayout(3, 2));
 		
+
+		// Data List
+// 		JPanel dataT = new JPanel();
+// 		dataT.setPreferredSize(new Dimension((getWidth()/20), 10));
+// //            data.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+// 		dataT.setLayout(new GridLayout(3, 2));
+// 		effAndDataPanelTrans.add(dataT, BorderLayout.CENTER);
+		
 		JLabel numTransLabel = new JLabel("Transmissão");
 		numTransLabel.setFont(new Font("Arial", Font.PLAIN, 20));
 		effAndDataPanelTrans.add(numTransLabel);
@@ -402,6 +462,19 @@ public class StaticDI extends JFrame implements ActionListener {
 		footerPanel.add(spt);
 
 		// -------------------------------------------------------------------------------------------------
+
+		
+
+        
+//      ASSINATURA NO FOOTER
+		// JPanel Assign = new JPanel();
+		// JLabel AssignTxt = new JLabel("Assinatura Aqui");
+		// // Assign.setPreferredSize(new Dimension(getWidth(), (getHeight() / 6)));
+		// Assign.setBackground(Color.LIGHT_GRAY);
+		// Assign.add(AssignTxt,BorderLayout.EAST);
+		// contentPane.add(Assign);
+
+
 
         allPanel = new JPanel();
         allPanel.setLayout(new GridLayout(3, 6, 10, 10)); // 3 rows, 6 columns
@@ -444,8 +517,62 @@ public class StaticDI extends JFrame implements ActionListener {
 
 				motorPanel[i].add(TitleSC[i-6], BorderLayout.NORTH);
 
+			}else if(i<=5){
+				// motorPanel[i].add(roomLabel[i], BorderLayout.NORTH);
+				Title[i] = new JPanel();
+				Title[i].setLayout(new GridLayout(2,1));
+				Title[i].setPreferredSize(new Dimension(getWidth(), (getHeight()/12)));
+
+				RunPanel[i] = new JPanel();
+				RunPanel[i].setLayout(new GridLayout(1,2));
+
+				StoppedTimeTotal[i] = new JLabel("Parada Total:");
+           		StoppedTimeTotal[i].setHorizontalAlignment(SwingConstants.CENTER);
+				StoppedTimeTotal[i].setBackground(Color.lightGray);
+				StoppedTimeTotal[i].setOpaque(true);
+				StoppedTimeTotal[i].setFont(new Font("Arial", Font.PLAIN, 15));
+
+				StoppedTimeAtual[i] = new JLabel("Atual:");
+				StoppedTimeAtual[i].setHorizontalAlignment(SwingConstants.CENTER);
+				StoppedTimeAtual[i].setBackground(Color.lightGray);
+				StoppedTimeAtual[i].setOpaque(true);
+				StoppedTimeAtual[i].setFont(new Font("Arial", Font.PLAIN, 15));
+
+				RunPanel[i].add(StoppedTimeTotal[i]);
+				RunPanel[i].add(StoppedTimeAtual[i]);
+
+				Title[i].add(roomLabel[i]);
+				Title[i].add(RunPanel[i]);
+
+				motorPanel[i].add(Title[i], BorderLayout.NORTH);
 			}else{
-				motorPanel[i].add(roomLabel[i], BorderLayout.NORTH);
+				// motorPanel[i].add(roomLabel[i], BorderLayout.NORTH);
+				Title[i-4] = new JPanel();
+				Title[i-4].setLayout(new GridLayout(2,1));
+				Title[i-4].setPreferredSize(new Dimension(getWidth(), (getHeight()/12)));
+
+				RunPanel[i-4] = new JPanel();
+				RunPanel[i-4].setLayout(new GridLayout(1,2));
+
+				StoppedTimeTotal[i-4] = new JLabel("Parada Total:" + i);
+           		StoppedTimeTotal[i-4].setHorizontalAlignment(SwingConstants.CENTER);
+				StoppedTimeTotal[i-4].setBackground(Color.lightGray);
+				StoppedTimeTotal[i-4].setOpaque(true);
+				StoppedTimeTotal[i-4].setFont(new Font("Arial", Font.PLAIN, 15));
+
+				StoppedTimeAtual[i-4] = new JLabel("Atual:");
+				StoppedTimeAtual[i-4].setHorizontalAlignment(SwingConstants.CENTER);
+				StoppedTimeAtual[i-4].setBackground(Color.lightGray);
+				StoppedTimeAtual[i-4].setOpaque(true);
+				StoppedTimeAtual[i-4].setFont(new Font("Arial", Font.PLAIN, 15));
+
+				RunPanel[i-4].add(StoppedTimeTotal[i-4]);
+				RunPanel[i-4].add(StoppedTimeAtual[i-4]);
+
+				Title[i-4].add(roomLabel[i]);
+				Title[i-4].add(RunPanel[i-4]);
+
+				motorPanel[i].add(Title[i-4], BorderLayout.NORTH);
 			}
     		
             // Second row: Cause
@@ -457,6 +584,7 @@ public class StaticDI extends JFrame implements ActionListener {
 
             // Third row: EFF and Data List
             JPanel effAndDataPanel = new JPanel();
+//            effAndDataPanel.setLayout(new GridLayout(3, 2));
 
             // EFF
             JPanel eff = new JPanel();
@@ -479,6 +607,7 @@ public class StaticDI extends JFrame implements ActionListener {
             // Data List
             JPanel data = new JPanel();
             data.setPreferredSize(new Dimension((getWidth()/15), 70));
+//            data.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
             data.setLayout(new GridLayout(3, 2));
             effAndDataPanel.add(data, BorderLayout.EAST);
             
@@ -527,6 +656,13 @@ public class StaticDI extends JFrame implements ActionListener {
         
     }
 	
+//	public void DialogBox(StaticDI parrent) {
+//		configureDialog = new ConfigureDialog(parrent);
+//		configureDialog.setModal(true);
+//		configureDialog.setVisible(true);
+//	}
+//	
+	
 	/**
 	 * 
 	 * Build Date:2011-9-14
@@ -553,12 +689,14 @@ public class StaticDI extends JFrame implements ActionListener {
 		
 		for (int i = 0; i < portCount; i++) {
 			DiPorts[i] = new DioPortUI(i, contentPane, location, imageIcon, (byte) 0);
+			// System.out.print("num portas: " + portCount + "\n" + DiPorts[i]);
 			if (i % 2 == 0) {
 				location.y += 40;
 			} else {
 				location.y += 55;
 			}
 		}
+//		headerPanel.setPreferredSize(new Dimension(350, 48 * portCount));
 
 		if (timer == null) {
 			timer = new Timer(1000, this);
@@ -580,10 +718,6 @@ public class StaticDI extends JFrame implements ActionListener {
 		}
 		int portCountAct;
 		ErrorCode errorCode = instantDiCtrl.Read(0, portCount, data);
-
-		for(int i=0; i<19; i++){
-			TimerETB[i]++;
-		}
 		
 		if (!Global.BioFaild(errorCode)) {
 			for (int b = 0; b < portCount; b++) {
@@ -592,97 +726,70 @@ public class StaticDI extends JFrame implements ActionListener {
 			}
 			int aux1=0, aux2=12;
 			int room=0;
-			for (int i = 17; i >= 0; i--) { 
+			for (int i = 17; i >= 0; i--) { // 3 rows * 6 columns = 18 containers
+//	        	int state = getState();
 	        	if(i<4) {
+					// System.out.println("\n-----------ActStateLow[" + (i+4) + "] : " + roomName[room] + "-> aux2: " + aux2);
 	        		if(actStateLow[i+4]== (byte)0) {
-						TimerETB[aux2]=0;
 	        			colorStatus[aux2] = Color.GREEN;
 	        			causal[aux2] = "Motor em funcionamento";
 	        			AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux2++;
 	        		}else {
-						registroCausalOK = AjustaCausal.VerificaCausal(roomName[room]);
 						causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
-
-						if(TimerETB[aux2]<300){
-							colorStatus[aux2] = Color.YELLOW;
-							if(registroCausalOK == true){
-								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
-							}else{
-								causal[aux2] = "Aguardando Causal";
-							}
-						}else{
+						if(causalOK==true){
 							colorStatus[aux2] = Color.RED;
-							if(registroCausalOK == true){
-								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
-							}else{
-								AjustaCausal.FaltaOperador(roomName[room]);
-								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
-							}
+							causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
+						}else{
+							colorStatus[aux2] = Color.YELLOW;
+							causal[aux2] = "Aguardando Causal";
 						}
+	        			
 	        			aux2++;
 	        		}
+//	        		System.out.print("\n High channel: "+ i + " = " +actStateHigh[i] + " ");
 	        	}else if(i>=4 && i<6){
+					// System.out.println("\n-----------ActStateHigh[" + (i-4) + "] : " + roomName[room] + "-> aux2: " + aux2);
 	        		if(actStateHigh[i-4]==(byte)0) {
-						TimerETB[aux2]=0;
 	        			colorStatus[aux2] = Color.GREEN;
 	        			causal[aux2] = "Motor em funcionamento";
 						AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux2++;
 	        		}else {
-						//registroCausalOK -> true = ultimo causal em aberto ----- flase = ultimo causal já fechado
-						registroCausalOK = AjustaCausal.VerificaCausal(roomName[room]);
-						// causalOK -> false = mais de 300s do registro do causal
-						causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
-
-						if(TimerETB[aux2]<300){
-							colorStatus[aux2] = Color.YELLOW;
-							if(registroCausalOK == true){
-								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
-							}else{
-								causal[aux2] = "Aguardando Causal";
-							}
-						}else{
+	        			causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
+						if(causalOK==true){
 							colorStatus[aux2] = Color.RED;
-							if(registroCausalOK == true){
-								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
-							}else{
-								AjustaCausal.FaltaOperador(roomName[room]);
-								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
-							}
+							causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
+						}else{
+							colorStatus[aux2] = Color.YELLOW;
+							causal[aux2] = "Aguardando Causal";
 						}
 	        			aux2++;
 	        		}
+//					System.out.print("\n Low channel: "+ i + " = " +actStateLow[i-10] + " ");
 	        	}else if(i>11){
+					// System.out.println("\n-----------ActStateHigh[" + (i-10) + "] : " + roomName[room] + "-> aux1: " + aux1);
 	        		if(actStateHigh[i-10]==(byte)0) {
-						TimerETB[aux1]=0;
 	        			colorStatus[aux1] = Color.GREEN;
 	        			causal[aux1] = "Motor em funcionamento";
 						AjustaCausal.SetHoraFinal(roomName[room]);
 	        			aux1++;
 	        		}else {
-						registroCausalOK = AjustaCausal.VerificaCausal(roomName[room]);
-						causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
-
-						if(TimerETB[aux1]<300){
-							colorStatus[aux1] = Color.YELLOW;
-							if(registroCausalOK == true){
-								causal[aux1] = Banco.fetchAndDisplayCausal(roomName[room]);
-							}else{
-								causal[aux1] = "Aguardando Causal";
-							}
-						}else{
+	        			causalOK = AjustaCausal.AguardandoCausal(roomName[room],i, aux1, aux2);
+						if(causalOK==true){
 							colorStatus[aux1] = Color.RED;
-							if(registroCausalOK == true){
-								causal[aux1] = Banco.fetchAndDisplayCausal(roomName[room]);
-							}else{
-								AjustaCausal.FaltaOperador(roomName[room]);
-								causal[aux1] = Banco.fetchAndDisplayCausal(roomName[room]);
-							}
+							causal[aux1] = Banco.fetchAndDisplayCausal(roomName[room]);
+						}else{
+							colorStatus[aux1] = Color.YELLOW;
+							causal[aux1] = "Aguardando Causal";
 						}
 	        			aux1++;
 	        		}
+//					System.out.print("\n Low channel: "+ i + " = " +actStateLow[i-10] + " ");
 	        	}
+	        	
+	        	
+//	        	System.out.print("1: " + aux1 + "& "+ "2: "+ aux2 + "\n");
 	       
 	        	if(motorPanel[i] != null) {
 	        		motorPanel[i].setBorder(BorderFactory.createLineBorder(colorStatus[i], 4));
