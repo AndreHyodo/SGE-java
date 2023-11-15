@@ -166,7 +166,7 @@ public class AjustaCausal {
             // Prepare the statement.
             preparedStatement = connection.prepareStatement(query);
 
-            preparedStatement.setString(1, "A04");
+            preparedStatement.setString(1, ETB);
             preparedStatement.setString(2, FaltaCausal);
             preparedStatement.setTime(3, sqlHoraAtual);
             preparedStatement.setTime(4, time);

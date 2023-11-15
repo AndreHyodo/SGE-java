@@ -85,13 +85,13 @@ public class StaticDI extends JFrame implements ActionListener {
 	public boolean causalOK;
 	private boolean registroCausalOK;
 
-	public static Color colorStatus[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
+	public static Color colorStatus[] = {Color.lightGray ,Color.lightGray , Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray};
 
-	public static Color colorStatusEFF_DEV[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
+	public static Color colorStatusEFF_DEV[] = {Color.lightGray ,Color.lightGray , Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray};
 
-	public static Color colorStatusEFF_DUR[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
+	public static Color colorStatusEFF_DUR[] = {Color.lightGray ,Color.lightGray , Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray};
 	
-	public static Color colorStatusEFF_SC[] = {Color.BLACK ,Color.BLACK , Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK};
+	public static Color colorStatusEFF_SC[] = {Color.lightGray ,Color.lightGray , Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray, Color.lightGray};
 	
 	public static int TimerETB[] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 	String color = "BLACK";
@@ -457,7 +457,9 @@ public class StaticDI extends JFrame implements ActionListener {
 				RunPanel[i] = new JPanel();
 				RunPanel[i].setLayout(new GridLayout(1,2));
 
-				StoppedTimeTotal[i] = new JLabel("Parada Total:");
+				// System.out.print(TimerParada.getTimerAtual(i));
+
+				StoppedTimeTotal[i] = new JLabel("Parada Total:"/*+ TimerParada.getTimerAtual(i).getDelay()*/);
            		StoppedTimeTotal[i].setHorizontalAlignment(SwingConstants.CENTER);
 				StoppedTimeTotal[i].setBackground(Color.lightGray);
 				StoppedTimeTotal[i].setOpaque(true);
@@ -485,7 +487,7 @@ public class StaticDI extends JFrame implements ActionListener {
 				RunPanel[i-4] = new JPanel();
 				RunPanel[i-4].setLayout(new GridLayout(1,2));
 
-				StoppedTimeTotal[i-4] = new JLabel("Parada Total:" + i);
+				StoppedTimeTotal[i-4] = new JLabel("Parada Total:");
            		StoppedTimeTotal[i-4].setHorizontalAlignment(SwingConstants.CENTER);
 				StoppedTimeTotal[i-4].setBackground(Color.lightGray);
 				StoppedTimeTotal[i-4].setOpaque(true);
@@ -621,6 +623,7 @@ public class StaticDI extends JFrame implements ActionListener {
 		if (timer == null) {
 			timer = new Timer(1000, this);
 		}
+		// TimerParada.implementTimer(8,0,0);
 		timer.start();
 	}
 
@@ -641,7 +644,10 @@ public class StaticDI extends JFrame implements ActionListener {
 
 		for(int i=0; i<19; i++){
 			TimerETB[i]++;
+			// System.out.println("Sala "+ i + " = "+ TimerETB[i]);
 		}
+
+
 		
 		if (!Global.BioFaild(errorCode)) {
 			for (int b = 0; b < portCount; b++) {
@@ -650,6 +656,7 @@ public class StaticDI extends JFrame implements ActionListener {
 			}
 			int aux1=0, aux2=12;
 			int room=0;
+			// Cronometro.go(true);
 			for (int i = 17; i >= 0; i--) { 
 	        	if(i<4) {
 	        		if(actStateLow[i+4]== (byte)0) {
@@ -663,6 +670,7 @@ public class StaticDI extends JFrame implements ActionListener {
 						causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
 
 						if(TimerETB[aux2]<300){
+							// TimerParada.StartTimer(aux2);
 							colorStatus[aux2] = Color.YELLOW;
 							if(registroCausalOK == true){
 								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
@@ -694,6 +702,7 @@ public class StaticDI extends JFrame implements ActionListener {
 						causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
 
 						if(TimerETB[aux2]<300){
+							// TimerParada.StartTimer(aux2);
 							colorStatus[aux2] = Color.YELLOW;
 							if(registroCausalOK == true){
 								causal[aux2] = Banco.fetchAndDisplayCausal(roomName[room]);
@@ -723,6 +732,7 @@ public class StaticDI extends JFrame implements ActionListener {
 						causalOK = AjustaCausal.AguardandoCausal(roomName[room], i, aux1, aux2);
 
 						if(TimerETB[aux1]<300){
+							//TimerParada.StartTimer(aux1);
 							colorStatus[aux1] = Color.YELLOW;
 							if(registroCausalOK == true){
 								causal[aux1] = Banco.fetchAndDisplayCausal(roomName[room]);
@@ -742,19 +752,31 @@ public class StaticDI extends JFrame implements ActionListener {
 	        		}
 	        	}
 	       
-	        	if(motorPanel[i] != null) {
+	        	if(motorPanel[i] != null && colorStatus[i]!=Color.lightGray) {
 	        		motorPanel[i].setBorder(BorderFactory.createLineBorder(colorStatus[i], 4));
 		            motorPanel[i].repaint();
 		            roomLabel[i].setBorder(BorderFactory.createLineBorder(colorStatus[i], 4));
 		            roomLabel[i].setBackground(colorStatus[i]);
 		            roomLabel[i].repaint();
-					spt.setBorder(BorderFactory.createLineBorder(colorStatus[18], 4));
+					spt.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 					spt.repaint();
-		            room_spt.setBorder(BorderFactory.createLineBorder(colorStatus[18], 4));
+		            room_spt.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
 		            room_spt.setBackground(colorStatus[18]);
 					room_spt.repaint();
 		            contentPane.repaint();
-	        	}
+	        	}else{
+					motorPanel[i].setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		            motorPanel[i].repaint();
+		            roomLabel[i].setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
+		            roomLabel[i].setBackground(colorStatus[i]);
+		            roomLabel[i].repaint();
+					spt.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+					spt.repaint();
+		            room_spt.setBorder(BorderFactory.createLineBorder(Color.BLACK, 4));
+		            room_spt.setBackground(colorStatus[18]);
+					room_spt.repaint();
+		            contentPane.repaint();
+				}
 
 	        	
 	        	if(colorStatus[i] != null) {
